@@ -29,7 +29,7 @@ let maximumDroughtArea = 0;
 // variables for editing colour with sliders
 let r = 255, g = 255, b = 255, a = 100;
 
-let frameRateAmount = 1000;
+let frameRateAmount = 60;
 
 
 
@@ -94,6 +94,7 @@ function draw() {
 
     // set fill of circles to brown with alpha 100 - to allow overlap
     fill(r, g, b, a);
+    noStroke(0);
 
     let diameter = (display.area / maximumDroughtArea) * windowHeight
 
@@ -103,26 +104,29 @@ function draw() {
     centre.x += centre.vx
     centre.y += centre.vy
 
-    if (centre.x > width + 250 || centre.x < 0 - 250) {
+    if (centre.x > width || centre.x < 0) {
       centre.vx *= -1;
     }
 
-    if (centre.y > height + 250 || centre.y < 0 - 250) {
+    if (centre.y > height || centre.y < 0) {
       centre.vy *= -1;
     }
 
 
 
     // set fill to white for country name
-    // fill(255);
+    fill(255);
+    stroke(0);
+    strokeWeight(4);
 
     // draw country name at centre of area
-    // text(display.country, centre.x, centre.y);
+    text(display.country, centre.x, centre.y);
   }
 
   // draw title at end to prevent covering it
-  // textSize(36);
-  // text(HEADERTEXT, width / 2, height - BOTTOMMARGIN / 2);
+  textSize(36);
+  
+  text(HEADERTEXT, width / 2, height - BOTTOMMARGIN / 2);
 
   frameRate(frameRateAmount);
 }
@@ -142,7 +146,7 @@ function allCC(e) {
       break;
     }
     case 33: {
-      frameRateAmount = 1000 * e.value;
+      frameRateAmount = 60 * e.value;
       break;
     }
     case 34: {
