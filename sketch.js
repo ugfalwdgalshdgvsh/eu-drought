@@ -27,7 +27,7 @@ let centres = [];
 let maximumDroughtArea = 0;
 
 // variables for editing colour with sliders
-let r = 255, g = 255, b = 255, a = 100;
+let r = 255, g = 255, b = 255, a = 200;
 
 let frameRateAmount = 60;
 
@@ -58,12 +58,11 @@ function setup() {
   speedX = random(10);
   speedY = random(10);
 
-
 }
 
 function draw() {
   // set background to black
-  background(0, 10);
+  background(0);
 
   // update droughtsToDisplay list to those of the currently displayed year
   // droughtsToDisplay = getAreasForYear(year);
@@ -96,10 +95,21 @@ function draw() {
     fill(r, g, b, a);
     noStroke(0);
 
-    let diameter = (display.area / maximumDroughtArea) * windowHeight
+    let diameter = (display.area / maximumDroughtArea) * windowHeight;
+    // let diameter = (display.area / maximumDroughtArea) * windowHeight
 
     // draw circle at (x, y) with proportional area depending on maximumDroughtArea and windowHeight
-    circle(centre.x, centre.y, diameter);
+    if (diameter > 0) {
+      diameter += 20
+      circle (centre.x, centre.y, diameter);
+          // set fill to white for country name
+    fill(255);
+    stroke(0);
+    strokeWeight(2);
+
+    // draw country name at centre of area
+    text(display.country, centre.x, centre.y);
+    }
 
     centre.x += centre.vx
     centre.y += centre.vy
@@ -113,21 +123,16 @@ function draw() {
     }
 
 
-
-    // set fill to white for country name
-    fill(255);
-    stroke(0);
-    strokeWeight(4);
-
-    // draw country name at centre of area
-    text(display.country, centre.x, centre.y);
   }
 
   // draw title at end to prevent covering it
   textSize(36);
+  fill(255);
+  stroke(0);
+  strokeWeight(2);
   
   text(HEADERTEXT, width / 2, height - BOTTOMMARGIN / 2);
-
+  text(year, 75, height - BOTTOMMARGIN / 2)
   frameRate(frameRateAmount);
 }
 
@@ -172,7 +177,7 @@ function allCC(e) {
     }
     case 39: {
       // slider 4
-      a = 100 * e.value;
+      a = 200 * e.value;
       break;
     }
   }
