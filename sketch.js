@@ -21,7 +21,7 @@ let droughtsToDisplay = [];
 
 let finalDrought = [];
 
-let circleSpeed= -1;
+let circleSpeed = -1;
 
 let backAlpha = 255;
 
@@ -33,8 +33,7 @@ let maximumDroughtArea = 0;
 // variables for editing colour with sliders
 let r = 255, g = 255, b = 255, a = 200;
 
-let numberOfPoints = 50;
-
+let numberOfPoints = 5;
 
 
 function setup() {
@@ -87,8 +86,6 @@ function draw() {
       droughtsToDisplay[index].area = droughtsToDisplay[index].area - 100;
     }
 
-
-
     // get info stored in the current index of the array
     const display = droughtsToDisplay[index];
 
@@ -105,29 +102,33 @@ function draw() {
     // draw circle at (x, y) with proportional area depending on maximumDroughtArea and windowHeight
     if (diameter > 0) {
       diameter += 20
-      circle (centre.x, centre.y, diameter);
+      // circle (centre.x, centre.y, diameter);
 
-      polygon (centre.x, centre.y, diameter / 2, numberOfPoints);
+      polygon(centre.x, centre.y, diameter / 2, numberOfPoints);
 
 
-    // set fill to white for country name
-    fill(255);
+      // set fill to white for country name
+      fill(255);
 
-    // draw country name at centre of area
-    if (textVisible)
-    text(display.country, centre.x, centre.y);
+      // draw country name at centre of area
+      if (textVisible)
+        text(display.country, centre.x, centre.y);
     }
 
     centre.x += centre.vx
     centre.y += centre.vy
 
     if (centre.x > width || centre.x < 0) {
-      centre.vx *= circleSpeed;
+      centre.vx *= -1
     }
 
+
     if (centre.y > height || centre.y < 0) {
-      centre.vy *= circleSpeed;
+
+      centre.vy *= -1
+
     }
+
 
 
   }
@@ -137,7 +138,7 @@ function draw() {
   fill(255);
   stroke(0);
   strokeWeight(2);
-  
+
   text(HEADERTEXT, width / 2, height - BOTTOMMARGIN / 2);
   text(year, 75, height - BOTTOMMARGIN / 2)
 
@@ -170,18 +171,26 @@ function allCC(e) {
       break;
     }
     case 33: {
-      numberOfPoints = 
+      numberOfPoints = map(e.value, 0, 1, 50, 5);
       break;
     }
     case 34: {
-      // circleSpeed = -1 * e.value;
-      // centre = circleSpeed * e.value;
-      circleSpeed = map(e.value, 0, 1, -1, -5);
+      circleSpeed = map(e.value, 0, 1, 2, 70);
+      for(let i = 0; i < centres.length; i++) {
+        let vector=createVector(centres[i].vx, centres[i].vy);
+        vector.normalize()
+        vector.mult(circleSpeed)
 
+        centres[i].vx = vector.x;
+        centres[i].vy = vector.y;
+
+        // Diana is the Queen of code!
+
+      }
       break;
     }
     case 35: {
-      backAlpha = map( e.value, 0, 1, 255, 5);
+      backAlpha = map(e.value, 0, 1, 255, 5);
       break;
     }
     case 36: {
@@ -216,15 +225,15 @@ function allNoteOn(e) {
   switch (e.data[1]) {
     case 40: {
       if (e.value) {
-          textVisible = !textVisible;
+        textVisible = !textVisible;
         // if value is 1 (button pressed)
-
-      }
         // if value is 0 (button released)
       }
+    }
       break;
     case 41: {
       if (e.value) {
+
       } else {
       }
       break;
