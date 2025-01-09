@@ -14,12 +14,16 @@ const BOTTOMMARGIN = 52;
 // parameter to get data from just one year
 let year = 2022;
 
+let textVisible = true
+
 // This vector is used to display the countries drought areas on the screen. It can be filled in different functions - for ex. getAreasForYear - as well as manually. Objects within the vector should be of type {country : String, area: Number, centre : {x: Number, y: Number}}
 let droughtsToDisplay = [];
 
 let finalDrought = [];
 
-let transitionTime = 5;
+let circleSpeed= -1;
+
+let backAlpha = 255;
 
 let centres = [];
 
@@ -29,7 +33,7 @@ let maximumDroughtArea = 0;
 // variables for editing colour with sliders
 let r = 255, g = 255, b = 255, a = 200;
 
-let frameRateAmount = 60;
+let numberOfPoints = 50;
 
 
 
@@ -62,7 +66,7 @@ function setup() {
 
 function draw() {
   // set background to black
-  background(0);
+  background(0, backAlpha);
 
   // update droughtsToDisplay list to those of the currently displayed year
   // droughtsToDisplay = getAreasForYear(year);
@@ -102,12 +106,15 @@ function draw() {
     if (diameter > 0) {
       diameter += 20
       circle (centre.x, centre.y, diameter);
-          // set fill to white for country name
+
+      polygon (centre.x, centre.y, diameter / 2, numberOfPoints);
+
+
+    // set fill to white for country name
     fill(255);
-    stroke(0);
-    strokeWeight(2);
 
     // draw country name at centre of area
+    if (textVisible)
     text(display.country, centre.x, centre.y);
     }
 
@@ -115,11 +122,11 @@ function draw() {
     centre.y += centre.vy
 
     if (centre.x > width || centre.x < 0) {
-      centre.vx *= -1;
+      centre.vx *= circleSpeed;
     }
 
     if (centre.y > height || centre.y < 0) {
-      centre.vy *= -1;
+      centre.vy *= circleSpeed;
     }
 
 
@@ -133,8 +140,20 @@ function draw() {
   
   text(HEADERTEXT, width / 2, height - BOTTOMMARGIN / 2);
   text(year, 75, height - BOTTOMMARGIN / 2)
-  frameRate(frameRateAmount);
+
 }
+
+function polygon(x, y, radius, npoints) {
+  let angle = TWO_PI / npoints;
+  beginShape();
+  for (let a = 0; a < TWO_PI; a += angle) {
+    let sx = x + cos(a) * radius;
+    let sy = y + sin(a) * radius;
+    vertex(sx, sy);
+  }
+  endShape(CLOSE);
+}
+
 
 /**
  * React to inputs from the control change sliders in the Midi controller
@@ -151,13 +170,18 @@ function allCC(e) {
       break;
     }
     case 33: {
-      frameRateAmount = 60 * e.value;
+      numberOfPoints = 
       break;
     }
     case 34: {
+      // circleSpeed = -1 * e.value;
+      // centre = circleSpeed * e.value;
+      circleSpeed = map(e.value, 0, 1, -1, -5);
+
       break;
     }
     case 35: {
+      backAlpha = map( e.value, 0, 1, 255, 5);
       break;
     }
     case 36: {
@@ -192,10 +216,13 @@ function allNoteOn(e) {
   switch (e.data[1]) {
     case 40: {
       if (e.value) {
-      } else {
+          textVisible = !textVisible;
+        // if value is 1 (button pressed)
+
+      }
+        // if value is 0 (button released)
       }
       break;
-    }
     case 41: {
       if (e.value) {
       } else {
