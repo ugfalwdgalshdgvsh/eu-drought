@@ -41,7 +41,7 @@ function setup() {
   maximumDroughtArea = calculateMaximumArea();
 
   // create canvas of maximum width and height
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth * 0.9, windowHeight * 0.9);
 
   // set stroke to null
   noStroke();
@@ -139,7 +139,7 @@ function draw() {
   stroke(0);
   strokeWeight(2);
 
-  text(HEADERTEXT, width / 2, height - BOTTOMMARGIN / 2);
+  text(HEADERTEXT, width / 2, BOTTOMMARGIN / 2);
   text(year, 75, height - BOTTOMMARGIN / 2)
 
 }
